@@ -725,14 +725,6 @@ PrefabInstance:
       propertyPath: colloctItemCount
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203, type: 3}
-      propertyPath: itemsPrefab.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203, type: 3}
-      propertyPath: 'itemsPrefab.Array.data[2]'
-      value: 
-      objectReference: {fileID: 392741054369597350, guid: dcc805469be8f8843a3d6b9be4ebc24a, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

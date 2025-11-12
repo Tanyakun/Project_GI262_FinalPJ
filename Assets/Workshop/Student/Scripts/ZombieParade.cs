@@ -6,13 +6,13 @@ namespace Solution
 {
     public class ZombieParade : OOPEnemy
     {
-        // ใช้ LinkedList ในการจัดการส่วนของงูเพื่อประสิทธิภาพในการเพิ่ม/ลบ
-        // ใช้ LinkedList ในการจัดการส่วนของงูเพื่อประสิทธิภาพในการเพิ่ม/ลบ
+        // ๏ฟฝ๏ฟฝ LinkedList ในก๏ฟฝรจัด๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝวน๏ฟฝอง๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอป๏ฟฝ๏ฟฝ๏ฟฝิท๏ฟฝ๏ฟฝ๏ฟฝาพในก๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ/ลบ
+        // ๏ฟฝ๏ฟฝ LinkedList ในก๏ฟฝรจัด๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝวน๏ฟฝอง๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอป๏ฟฝ๏ฟฝ๏ฟฝิท๏ฟฝ๏ฟฝ๏ฟฝาพในก๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ/ลบ
         private LinkedList<GameObject> Parade = new LinkedList<GameObject>();
         public int SizeParade = 3;
         int timer = 0;
-        public GameObject[] bodyPrefab; // Prefab ของส่วนลำตัวงู
-        public float moveInterval = 0.5f; // ช่วงเวลาในการเคลื่อนที่ (0.5 วินาที)
+        public GameObject[] bodyPrefab; // Prefab ๏ฟฝอง๏ฟฝ๏ฟฝวน๏ฟฝำต๏ฟฝวง๏ฟฝ
+        public float moveInterval = 0.5f; // ๏ฟฝ๏ฟฝวง๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝในก๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอน๏ฟฝ๏ฟฝ๏ฟฝ (0.5 ๏ฟฝินาท๏ฟฝ)
 
         private Vector3 moveDirection;
 
@@ -20,7 +20,7 @@ namespace Solution
         {
             base.SetUP();
             moveDirection = Vector3.up;
-            // เริ่ม Coroutine สำหรับการเคลื่อนที่
+            // ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ Coroutine ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝับ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอน๏ฟฝ๏ฟฝ๏ฟฝ
             positionX = (int)transform.position.x;
             positionX = (int)transform.position.y;
             StartCoroutine(MoveParade());
@@ -37,26 +37,26 @@ namespace Solution
 
             return possibleDirections[Random.Range(0, possibleDirections.Count)];
         }
-        // Coroutine สำหรับการเคลื่อนที่ทีละช่อง
+        // Coroutine ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝับ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝะช๏ฟฝอง
         IEnumerator MoveParade()
         {      
-            //0. สร้างหัวงู
+            //0. ๏ฟฝ๏ฟฝ๏ฟฝาง๏ฟฝ๏ฟฝวง๏ฟฝ
             Parade.AddFirst(this.gameObject);
             while (isAlive)
             {
-                // 1. ดึงส่วนแรกของงูออกมา
+                // 1. ๏ฟฝึง๏ฟฝ๏ฟฝวน๏ฟฝรก๏ฟฝอง๏ฟฝ๏ฟฝ๏ฟฝอก๏ฟฝ๏ฟฝ
                 LinkedListNode<GameObject> firstNode = Parade.First;
                 GameObject firstPart = firstNode.Value;
 
-                // 2. ดึงส่วนสุดท้ายของงูออกมา
+                // 2. ๏ฟฝึง๏ฟฝ๏ฟฝวน๏ฟฝุด๏ฟฝ๏ฟฝ๏ฟฝยของ๏ฟฝ๏ฟฝ๏ฟฝอก๏ฟฝ๏ฟฝ
                 LinkedListNode<GameObject> lastNode = Parade.Last;
                 GameObject lastPart = lastNode.Value;
              
-                // 3. ลบส่วนสุดท้ายออกจาก LinkedList
+                // 3. ลบ๏ฟฝ๏ฟฝวน๏ฟฝุด๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอก๏ฟฝาก LinkedList
                 Parade.RemoveLast();
 
-                // 5. กำหนดตำแหน่งและทิศทางของส่วนที่ถูกย้ายมาใหม่
-                // ให้ไปอยู่ที่ตำแหน่งของส่วนหัวงู (ซึ่งเพิ่งเคลื่อนที่ไปเมื่อครู่)
+                // 5. ๏ฟฝ๏ฟฝหน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝหน๏ฟฝ๏ฟฝ๏ฟฝะท๏ฟฝศทาง๏ฟฝอง๏ฟฝ๏ฟฝวน๏ฟฝ๏ฟฝ๏ฟฝูก๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ
+                // ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝหน่งของ๏ฟฝ๏ฟฝวน๏ฟฝ๏ฟฝวง๏ฟฝ (๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอค๏ฟฝ๏ฟฝ๏ฟฝ)
                 int toX = 0;
                 int toY = 0;
 
@@ -68,7 +68,7 @@ namespace Solution
                     toY = (int)(firstPart.transform.position.y + moveDirection.y);
                     isCollide = IsCollision(toX, toY);
                 }
-                //6. เคลื่อนที่
+                //6. ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอน๏ฟฝ๏ฟฝ๏ฟฝ
                 mapGenerator.mapdata[positionX, positionY] = null;
                 positionX = toX;
                 positionY = toY;
@@ -77,15 +77,15 @@ namespace Solution
                 mapGenerator.mapdata[positionX, positionY] = lastPart.GetComponent<Identity>();
 
 
-                // 7. เพิ่มส่วนนั้นกลับเข้าไปเป็นส่วนที่สองของ LinkedList
-                // (ซึ่งก็คือส่วนแรกของลำตัว)
+                // 7. ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝวน๏ฟฝ๏ฟฝ้นก๏ฟฝับ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝวน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอง๏ฟฝอง LinkedList
+                // (๏ฟฝ๏ฟฝ่งก๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝวน๏ฟฝรก๏ฟฝอง๏ฟฝำต๏ฟฝ๏ฟฝ)
                 Parade.AddFirst(lastNode);
-                // รอตามเวลาที่กำหนดก่อนการเคลื่อนที่ครั้งต่อไป
+                // ๏ฟฝอต๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝาท๏ฟฝ๏ฟฝ๏ฟฝหน๏ฟฝ๏ฟฝ๏ฟฝอน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝอน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ้งต๏ฟฝ๏ฟฝ๏ฟฝ
                 if (Parade.Count < SizeParade) {
                     timer++;
                     if (timer > 3)
                     {
-                        Grow();
+                        //Grow();
                         timer = 0;
                     }
                 }
@@ -94,7 +94,7 @@ namespace Solution
         }
         private bool IsCollision(int x, int y)
         {
-            // 4. ตรวจสอบสิ่งกีดขวาง
+            // 4. ๏ฟฝ๏ฟฝวจ๏ฟฝอบ๏ฟฝ๏ฟฝ่งกีด๏ฟฝ๏ฟฝาง
             if (HasPlacement(x, y))
             {
                 return true;
@@ -102,18 +102,18 @@ namespace Solution
             return false;
         }
         
-        // ฟังก์ชันสำหรับเพิ่มส่วนของงู (Grow)
-        private void Grow()
-        {
-            GameObject newPart = Instantiate(bodyPrefab[0]);
-            // กำหนดตำแหน่งเริ่มต้นของส่วนใหม่ให้อยู่ที่เดียวกับส่วนสุดท้ายของงู
-            GameObject lastPart = Parade.Last.Value;
-            newPart.transform.position = lastPart.transform.position;
-            mapGenerator.SetUpItem(positionX,positionY, newPart, mapGenerator.enemyParent, mapGenerator.enemy);
-            //newPart.transform.rotation = lastPart.transform.rotation;
-            // เพิ่มส่วนใหม่เข้าไปใน Linked List
-            Parade.AddLast(newPart);
-        }
+        // ๏ฟฝัง๏ฟฝ๏ฟฝัน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝับ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝวน๏ฟฝอง๏ฟฝ๏ฟฝ (Grow)
+            //private void Grow()
+            //{
+                //GameObject newPart = Instantiate(bodyPrefab[0]);
+                // ๏ฟฝ๏ฟฝหน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝหน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ้นของ๏ฟฝ๏ฟฝวน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝวกับ๏ฟฝ๏ฟฝวน๏ฟฝุด๏ฟฝ๏ฟฝ๏ฟฝยของ๏ฟฝ๏ฟฝ
+                //GameObject lastPart = Parade.Last.Value;
+                //newPart.transform.position = lastPart.transform.position;
+                //mapGenerator.SetUpItem(positionX,positionY, newPart, mapGenerator.enemyParent, mapGenerator.enemy);
+                //newPart.transform.rotation = lastPart.transform.rotation;
+                // ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝวน๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ๏ฟฝ Linked List
+                //Parade.AddLast(newPart);
+            //}
 
     }
 }

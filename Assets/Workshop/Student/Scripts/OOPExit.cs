@@ -10,10 +10,10 @@ namespace Solution
     {
         public GameObject YouWin;
         public string ItemToOpen = "Key";
-        public int ItemAmountToOpen = 2;
+        public int ItemAmountToOpen = 1;
         public override bool Hit()
         {
-            // µÃÇ¨ÊÍºÇèÒ¼ÙéàÅè¹ÁÕäÍà·çÁ·ÕèµéÍ§¡ÒÃËÃ×ÍäÁè
+            // ï¿½ï¿½Ç¨ï¿½Íºï¿½ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             bool IsHasItemAmount = mapGenerator.player.inventory.HasItem(ItemToOpen, ItemAmountToOpen);
             if (IsHasItemAmount)
             {
