@@ -28,6 +28,7 @@ namespace Solution
         public GameObject[] collectItemsPrefab;
         public GameObject[] EnemyPrefab;
         public GameObject[] SkillPrefab;
+        public GameObject[] PickAxePrefabArray;
 
         [Header("Set Transform")]
         public Transform floorParent;
@@ -86,6 +87,7 @@ namespace Solution
             PlaceItemsOnMap(colloctItemCount, collectItemsPrefab, itemParent, collectItem);
             PlaceItemsOnMap(SkillCount, SkillPrefab, itemParent, collectItem);
             PlaceItemsOnMap(EnemyCount, EnemyPrefab, enemyParent, enemy);
+            SpawnPickAxeNearPlayer(PickAxePrefabArray, itemParent, radius: 1);
 
             yield return new WaitForSeconds(0.5f);
             RandomDamageToListEnemies();
@@ -120,7 +122,6 @@ namespace Solution
 
         private void SetUpPlayer()
         {
-            // 🌀 สุ่มตำแหน่งเริ่มต้นของ Player
             playerStartPos = GetRandomEmptyPosition();
             player.mapGenerator = this;
             player.positionX = playerStartPos.x;
@@ -131,8 +132,7 @@ namespace Solution
 
         private void SetUpExit()
         {
-            // 🌀 สุ่มตำแหน่ง Exit โดยให้ห่างจาก Player อย่างน้อย 5 ช่อง (หรือปรับค่าได้)
-            int minDistance = Mathf.Max(X, Y) / 3; // ปรับระยะได้ตามใจท่านจอมมาร
+            int minDistance = Mathf.Max(X, Y) / 10; 
             Vector2Int exitPos;
 
             int loopGuard = 500;
@@ -162,7 +162,6 @@ namespace Solution
                 tries++;
             }
 
-            // ถ้าหาไม่ได้จริง ๆ ก็ fallback
             return new Vector2Int(0, 0);
         }
 
@@ -172,7 +171,7 @@ namespace Solution
                 return Wall;
             return mapdata[(int)x, (int)y];
         }
-
+        //1
         public void SetUpItem(int x, int y, GameObject[] _itemsPrefab, Transform parrent, string _name)
         {
             int r = Random.Range(0, _itemsPrefab.Length);
@@ -247,6 +246,9 @@ namespace Solution
 
             Debug.Log($"Start placing {count} obstacles on {X}x{Y} map");
 
+            
+            Vector2Int keyPosition = FindKeyPosition();
+
             while (placed < count && attempts < maxAttempts)
             {
                 attempts++;
@@ -255,17 +257,40 @@ namespace Solution
                 int y = Random.Range(0, Y);
                 var p = new Vector2Int(x, y);
 
-                if (p == playerStartPos || (x == X - 1 && y == Y - 1)) continue;
+                
+                if (p == playerStartPos || p == keyPosition || (x == X - 1 && y == Y - 1))
+                    continue;
+
                 if (reservedBackbone.Contains(p)) continue;
                 if (mapdata[x, y] != null) continue;
 
-                if (HasPath(playerStartPos, new Vector2Int(X - 1, Y - 1), p))
+                
+                mapdata[x, y] = prefab[Random.Range(0, prefab.Length)].GetComponent<Identity>();
+
+                // ตรวจว่า Player ยังไปถึง Key และ Exit ได้หรือไม่
+                bool canReachKey = HasPath(playerStartPos, keyPosition);
+                bool canReachExit = HasPath(playerStartPos, new Vector2Int(X - 1, Y - 1));
+
+                if (!canReachKey || !canReachExit)
                 {
-                    SetUpItem(x, y, prefab, parent, itemType);
-                    placed++;
+                    // ถ้าเส้นทางตัน -> ยกเลิกการวาง
+                    mapdata[x, y] = null;
+                    continue;
                 }
 
-                if (attempts % 100 == 0)
+                // วาง DemonWall ตัวจริง
+                GameObject obj = Instantiate(prefab[Random.Range(0, prefab.Length)], new Vector3(x, y, 0), Quaternion.identity, parent);
+                var id = obj.GetComponent<Identity>();
+                mapdata[x, y] = id;
+                id.positionX = x;
+                id.positionY = y;
+                id.mapGenerator = this;
+                id.Name = itemType;
+                obj.name = $"Object_{id.Name} {x},{y}";
+
+                placed++;
+
+                if (attempts % 200 == 0)
                     yield return null;
             }
 
@@ -274,6 +299,23 @@ namespace Solution
 
             yield return null;
         }
+
+        // ฟังก์ชันช่วยหาตำแหน่ง Key บน mapdata
+        private Vector2Int FindKeyPosition()
+        {
+            for (int x = 0; x < X; x++)
+            {
+                for (int y = 0; y < Y; y++)
+                {
+                    var id = mapdata[x, y];
+                    if (id != null && id.Name == "key")
+                        return new Vector2Int(x, y);
+                }
+            }
+            // fallback
+            return new Vector2Int(0, 0);
+        }
+
 
         private bool InBounds(int x, int y) => (x >= 0 && x < X && y >= 0 && y < Y);
 
@@ -285,7 +327,6 @@ namespace Solution
             return false;
         }
 
-        // 🌀 เพิ่มฟังก์ชันสุ่มทิศทาง
         private void ShuffleDirections(int[] dx, int[] dy)
         {
             for (int i = 0; i < dx.Length; i++)
@@ -310,7 +351,7 @@ namespace Solution
             int[] dx = { 1, -1, 0, 0 };
             int[] dy = { 0, 0, 1, -1 };
 
-            ShuffleDirections(dx, dy); // 🔧 เพิ่มสุ่มทิศทางตรงนี้
+            ShuffleDirections(dx, dy);
 
             while (q.Count > 0)
             {
@@ -337,6 +378,8 @@ namespace Solution
                 }
             }
             return false;
+
+            
         }
 
         private void BuildBackbonePath()
@@ -356,7 +399,7 @@ namespace Solution
             int[] dx = { 1, -1, 0, 0 };
             int[] dy = { 0, 0, 1, -1 };
 
-            ShuffleDirections(dx, dy); // 🔧 เพิ่มสุ่มทิศทางตรงนี้
+            ShuffleDirections(dx, dy);
 
             bool found = false;
 
@@ -392,6 +435,36 @@ namespace Solution
                 cur = prev[cur];
                 reservedBackbone.Add(cur);
             }
+        }
+        public void SpawnPickAxeNearPlayer(GameObject[] pickAxePrefab, Transform parent, int radius = 3)
+        {
+            int tries = 0;
+            while (tries < 100)
+            {
+                // สุ่มตำแหน่ง x,y รอบ playerStartPos
+                int x = playerStartPos.x + Random.Range(-radius, radius + 1);
+                int y = playerStartPos.y + Random.Range(-radius, radius + 1);
+
+                // ตรวจ bounds ของแผนที่
+                if (x < 0 || x >= X || y < 0 || y >= Y)
+                {
+                    tries++;
+                    continue;
+                }
+
+                // ตรวจว่าตำแหน่งว่าง
+                if (mapdata[x, y] == null)
+                {
+                    // วาง PickAxe
+                    SetUpItem(x, y, pickAxePrefab, parent, "PickAxe");
+                    Debug.Log($"PickAxe spawned at ({x},{y}) near player.");
+                    return;
+                }
+
+                tries++;
+            }
+
+            Debug.LogWarning("ไม่สามารถวาง PickAxe ใกล้ผู้เล่นได้");
         }
     }
 }

@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4af2ec6bb92d1f443bfe7800f63c79a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Solution.CollectAbleItem
-  Name: Pickaxe
+  Name: PickAxe
   positionX: 0
   positionY: 0
   mapGenerator: {fileID: 0}

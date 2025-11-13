@@ -68,6 +68,8 @@ namespace Solution
                 Debug.Log("No FireStorm in inventory");
             }
         }
+
+
         public OOPEnemy[] SortEnemiesByRemainningEnergy1()
         {
             var enemies = mapGenerator.GetEnemies();
