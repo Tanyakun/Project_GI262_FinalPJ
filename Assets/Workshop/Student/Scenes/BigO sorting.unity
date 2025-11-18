@@ -2434,7 +2434,7 @@ GameObject:
   - component: {fileID: 1905127740}
   - component: {fileID: 1905127739}
   m_Layer: 5
-  m_Name: Ui Inventory
+  m_Name: Ui Crafting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2613,7 +2613,7 @@ GameObject:
   - component: {fileID: 2023408086}
   - component: {fileID: 2023408085}
   m_Layer: 5
-  m_Name: CanvasInventory
+  m_Name: CanvasCrafting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
