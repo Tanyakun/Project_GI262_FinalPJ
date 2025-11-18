@@ -1,94 +1,166 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
+
 using UnityEngine;
+
+
 
 namespace Solution
 {
+
     public class Inventory : MonoBehaviour
+
     {
+
         public Dictionary<string, int> inventory = new Dictionary<string, int>();
 
-        // **ÊèÇ¹·Õèá¡éä¢/à¾ÔèÁ: 1. ÍéÒ§ÍÔ§¶Ö§ UI Updater**
-        public InventoryUIUpdater uiUpdater;
 
-        // à¾ÔèÁäÍà·çÁ
+
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
         public void AddItem(string item, int amount)
+
         {
+
+            // 1. ï¿½ï¿½Ç¨ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã¹¤ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ§
+
             if (inventory.ContainsKey(item))
+
             {
+
                 inventory[item] += amount;
+
             }
+
             else
+
             {
+
+                // ï¿½ï¿½ï¿½ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Dictionary
+
                 inventory.Add(item, amount);
+
             }
+
+
 
             Debug.Log("Added " + amount + " " + item + ". Total: " + inventory[item]);
 
-            // **ÊèÇ¹·Õèá¡éä¢/à¾ÔèÁ: 2. àÃÕÂ¡ÍÑ»à´µ UI**
-            if (uiUpdater != null)
-            {
-                uiUpdater.UpdateAllItemCounts();
-            }
         }
 
-        // ÅºäÍà·çÁ
+
+
+        // Åºï¿½ï¿½ï¿½ï¿½ï¿½
+
         public void UseItem(string item, int amount)
+
         {
+
+            //4. ï¿½ï¿½Ç¨ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã¹¤ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
             if (inventory.ContainsKey(item))
+
             {
+
+                // Åºï¿½Ó¹Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¡
+
                 inventory[item] -= amount;
 
+
+
+                // ï¿½ï¿½Ò¨Ó¹Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0 ï¿½ï¿½ï¿½â–¡ï¿½ï¿½Â¡ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¡ï¿½Ò¡ Dictionary
+
                 if (inventory[item] <= 0)
+
                 {
+
                     inventory.Remove(item);
+
                     Debug.Log("Removed all " + item + " from inventory.");
-                }
-                else
-                {
-                    Debug.Log("Removed " + amount + " " + item + ". Remaining: " + inventory[item]);
+
                 }
 
-                // **ÊèÇ¹·Õèá¡éä¢/à¾ÔèÁ: 3. àÃÕÂ¡ÍÑ»à´µ UI**
-                if (uiUpdater != null)
+                else
+
                 {
-                    uiUpdater.UpdateAllItemCounts();
+
+                    Debug.Log("Removed " + amount + " " + item + ". Remaining: " + inventory[item]);
+
                 }
+
             }
+
             else
+
             {
+
                 Debug.Log("Cannot remove " + item + ". Not found in inventory.");
+
             }
+
         }
 
         public bool HasItem(string item, int amount)
+
         {
+
+            //2. ï¿½ï¿½Ç¨ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã¹¤ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Õ¨Ó¹Ç¹ï¿½ï¿½Â§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
             return inventory.ContainsKey(item) && inventory[item] >= amount;
+
         }
 
-        // µÃÇ¨ÊÍº¨Ó¹Ç¹äÍà·çÁ
+        // ï¿½ï¿½Ç¨ï¿½Íºï¿½Ó¹Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½
+
         public int GetItemCount(string item)
+
         {
+
+            //3. ï¿½ï¿½Ç¨ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã¹¤ï¿½Ñ§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â–¡ï¿½ï¿½Ò¨Ó¹Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
             if (inventory.ContainsKey(item))
+
             {
+
                 return inventory[item];
+
             }
+
             return 0;
+
         }
 
-        // áÊ´§ÃÒÂ¡ÒÃ·Ñé§ËÁ´ã¹¤ÅÑ§
+
+
+        // ï¿½Ê´ï¿½ï¿½ï¿½Â¡ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ã¹¤ï¿½Ñ§
+
         public void PrintInventory()
+
         {
+
             Debug.Log("--- Inventory Content ---");
+
             if (inventory.Count == 0)
+
             {
+
                 Debug.Log("Inventory is empty.");
+
                 return;
+
             }
+
+
 
             foreach (var itemEntry in inventory)
+
             {
+
                 Debug.Log(itemEntry.Key + ": " + itemEntry.Value);
+
             }
+
         }
+
     }
+
 }
