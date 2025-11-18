@@ -4,5 +4,15 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Workshop/Student/Scenes/Main menu/Main menu.unity
+    guid: ee23d7cac91399c4f84306bc8d5036b6
+  - enabled: 1
+    path: Assets/Workshop/Student/Scenes/BigO sorting.unity
+    guid: 6fabfb87e0b87fe4c9cc7ec5c7faae67
+  - enabled: 1
+    path: Assets/Workshop/Student/Scenes/BigO sorting 1.unity
+    guid: 7742749a2cd9ddf4eae84e90497ea9f1
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0
