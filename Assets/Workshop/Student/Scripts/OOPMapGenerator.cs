@@ -171,7 +171,7 @@ namespace Solution
                 return Wall;
             return mapdata[(int)x, (int)y];
         }
-        //1
+        
         public void SetUpItem(int x, int y, GameObject[] _itemsPrefab, Transform parrent, string _name)
         {
             int r = Random.Range(0, _itemsPrefab.Length);
@@ -248,6 +248,7 @@ namespace Solution
 
             
             Vector2Int keyPosition = FindKeyPosition();
+            Vector2Int exitPosition = FindExitPosition();
 
             while (placed < count && attempts < maxAttempts)
             {
@@ -269,7 +270,7 @@ namespace Solution
 
                 // ตรวจว่า Player ยังไปถึง Key และ Exit ได้หรือไม่
                 bool canReachKey = HasPath(playerStartPos, keyPosition);
-                bool canReachExit = HasPath(playerStartPos, new Vector2Int(X - 1, Y - 1));
+                bool canReachExit = HasPath(playerStartPos, exitPosition);
 
                 if (!canReachKey || !canReachExit)
                 {
@@ -313,6 +314,21 @@ namespace Solution
                 }
             }
             // fallback
+            return new Vector2Int(0, 0);
+        }
+        private Vector2Int FindExitPosition()
+        {
+            for (int x = 0; x < X; x++)
+            {
+                for (int y = 0; y < Y; y++)
+                {
+                    var id = mapdata[x, y];
+                    if (id != null && id.Name == exit)   // exit คือ string ที่มีอยู่แล้วในสคริปต์
+                        return new Vector2Int(x, y);
+                }
+            }
+
+            // fallback ถ้าไม่พบ
             return new Vector2Int(0, 0);
         }
 
