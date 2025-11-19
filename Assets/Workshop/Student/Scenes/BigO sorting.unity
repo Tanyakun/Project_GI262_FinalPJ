@@ -837,6 +837,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 543097686}
+  - component: {fileID: 543097687}
   m_Layer: 0
   m_Name: Inventory Canvas
   m_TagString: Untagged
@@ -860,6 +861,18 @@ Transform:
   - {fileID: 545353128}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &543097687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 543097685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dca6699fad53f94f86b4b99eb0753c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Solution.Inventory
 --- !u!1 &545353127
 GameObject:
   m_ObjectHideFlags: 0
@@ -929,10 +942,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -1425,6 +1438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 680280847}
   - component: {fileID: 680280848}
+  - component: {fileID: 680280849}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1460,6 +1474,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Craftable
   uiPanel: {fileID: 2023408084}
+--- !u!114 &680280849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680280846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d8d45e0a6d50e4bb2077a778b969e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Solution.InventoryUI
+  inventoryUI: {fileID: 543097685}
 --- !u!114 &760521284 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
@@ -4277,9 +4304,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
+      propertyPath: collectItemsPrefab.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
       propertyPath: 'PickAxePrefabArray.Array.data[0]'
       value: 
       objectReference: {fileID: 392741054369597350, guid: dcc805469be8f8843a3d6b9be4ebc24a,
+        type: 3}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: 'collectItemsPrefab.Array.data[1]'
+      value: 
+      objectReference: {fileID: 3173956647535010328, guid: 9cd6c568c3a68b74e913c0eb741260d9,
         type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
