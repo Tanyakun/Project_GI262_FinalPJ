@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 244292908213851704}
   - component: {fileID: 1155437445553721644}
+  - component: {fileID: 1847821855084554528}
   - component: {fileID: 4192131923024734894}
   m_Layer: 0
   m_Name: Pickaxe
@@ -91,6 +92,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1847821855084554528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 392741054369597350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7f169a297f94a741b0dcda680e2e5b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemObject
+  item: {fileID: 11400000, guid: 7b0492196e530e7489e9de75be0bcb08, type: 2}
+  amount: 1
 --- !u!114 &4192131923024734894
 MonoBehaviour:
   m_ObjectHideFlags: 0

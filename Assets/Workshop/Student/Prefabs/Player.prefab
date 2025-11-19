@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5156928828496199718}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,6 +54,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -75,6 +77,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
@@ -106,7 +109,13 @@ MonoBehaviour:
   positionY: 0
   mapGenerator: {fileID: 0}
   energy: 20
+  maxEnergy: 0
   AttackPoint: 10
+  spriteRenderer: {fileID: 0}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  damagedColor1: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  damagedColor2: {r: 1, g: 0, b: 0, a: 1}
+  Canvas: {fileID: 0}
   inventory: {fileID: 5156928828496199718}
 --- !u!114 &5156928828496199718
 MonoBehaviour:

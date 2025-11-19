@@ -9,6 +9,9 @@ namespace Solution
 
     public class OOPPlayer : Character
     {
+        [Header("InventoryCanvas")]
+        public InventoryCanvas inventoryCanvas;
+
         public Inventory inventory;
         public override void SetUP()
         {
