@@ -1328,7 +1328,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 680280847}
-  - component: {fileID: 680280848}
+  - component: {fileID: 680280850}
+  - component: {fileID: 680280851}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1351,7 +1352,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &680280848
+--- !u!114 &680280850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680280846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dca6699fad53f94f86b4b99eb0753c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Solution.Inventory
+--- !u!114 &680280851
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1363,7 +1376,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d4769b0e22fa846bfb96dd1e7813c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Craftable
-  uiPanel: {fileID: 2023408084}
 --- !u!114 &760521284 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
@@ -3615,6 +3627,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
+      propertyPath: ResourceCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
       propertyPath: obsatcleCount
       value: 25
       objectReference: {fileID: 0}
@@ -3646,7 +3663,7 @@ PrefabInstance:
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
       propertyPath: ResourcePrefab.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
@@ -3744,11 +3761,17 @@ PrefabInstance:
         type: 3}
       propertyPath: 'ResourcePrefab.Array.data[1]'
       value: 
-      objectReference: {fileID: 6702759267070617441, guid: e67bbde33bdaca24fa8b37b8c6ac75d9,
+      objectReference: {fileID: 364264809626252256, guid: 75e1566d76012f84abf58c25d6822c5d,
         type: 3}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
       propertyPath: 'ResourcePrefab.Array.data[2]'
+      value: 
+      objectReference: {fileID: 364264809626252256, guid: 75e1566d76012f84abf58c25d6822c5d,
+        type: 3}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: 'ResourcePrefab.Array.data[3]'
       value: 
       objectReference: {fileID: 364264809626252256, guid: 75e1566d76012f84abf58c25d6822c5d,
         type: 3}

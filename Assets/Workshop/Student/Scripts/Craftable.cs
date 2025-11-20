@@ -1,17 +1,52 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Craftable : MonoBehaviour
+namespace Solution
 {
-    public GameObject uiPanel;   // ลาก UI Panel มาใส่ใน Inspector
-
-    private bool isOpen = false;
-
-    void Update()
+    public class Craftable : Inventory
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        public void CraftSilverSword()
         {
-            isOpen = !isOpen;                // สลับสถานะ เปิด/ปิด
-            uiPanel.SetActive(isOpen);       // เปิดหรือปิด UI
+            string itemToCraft = "Silver Sword";
+            Dictionary<string, int> requiredMaterials = new Dictionary<string, int>()
+            {
+                { "Silver Ingot", 1 },
+                { "Wood Log", 1 }
+            };
+
+            List<string> missingMaterials = new List<string>();
+
+            foreach (var material in requiredMaterials)
+            {
+                int countInInventory = GetItemCount(material.Key);
+                if (countInInventory < material.Value)
+                {
+                    missingMaterials.Add(material.Key + " x" + (material.Value - countInInventory));
+                }
+            }
+
+            if (missingMaterials.Count > 0)
+            {
+                Debug.Log("Cannot craft " + itemToCraft + ". Missing: " + string.Join(", ", missingMaterials));
+            }
+            else
+            {
+                foreach (var material in requiredMaterials)
+                {
+                    UseItem(material.Key, material.Value);
+                }
+
+                AddItem(itemToCraft, 1);
+                Debug.Log("Crafted " + itemToCraft + " successfully!");
+            }
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                CraftSilverSword();
+            }
         }
     }
 }

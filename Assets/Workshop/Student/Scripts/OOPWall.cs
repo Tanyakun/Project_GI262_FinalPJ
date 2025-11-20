@@ -21,23 +21,15 @@ namespace Solution
 
         public override bool Hit()
         {
-            // ตรวจสอบว่าผู้เล่นมี Inventory
-            Inventory playerInventory = mapGenerator.player.GetComponent<Inventory>();
-            if (playerInventory == null)
-            {
-                Debug.LogWarning("Player has no Inventory component!");
-                return false;
-            }
-
-            // ตรวจสอบว่าผู้เล่นมี PickAxe แบบ ignore case
-            if (!HasItemIgnoreCase(playerInventory, ItemToDig, 1))
+            // ตรวจสอบว่ามี PickAxe ใน static inventory
+            if (!HasItemIgnoreCase(ItemToDig, 1))
             {
                 Debug.Log("You need a PickAxe to break this wall!");
                 return false;
             }
 
             // ใช้ PickAxe 1 ชิ้น
-            UseItemIgnoreCase(playerInventory, ItemToDig);
+            UseItemIgnoreCase(ItemToDig, 1);
 
             // ลบกำแพงจาก map
             mapGenerator.mapdata[positionX, positionY] = null;
@@ -47,25 +39,26 @@ namespace Solution
             return true;
         }
 
-        // ฟังก์ชันตรวจสอบไอเท็มแบบ ignore case
-        private bool HasItemIgnoreCase(Inventory inv, string item, int amount)
+        // ตรวจสอบไอเท็มแบบ ignore case
+        private bool HasItemIgnoreCase(string item, int amount)
         {
-            foreach (var key in inv.inventory.Keys)
+            foreach (var kvp in Inventory.inventory)
             {
-                if (key.ToLower() == item.ToLower() && inv.inventory[key] >= amount)
+                if (kvp.Key.Equals(item, System.StringComparison.OrdinalIgnoreCase) && kvp.Value >= amount)
                     return true;
             }
             return false;
         }
 
-        // ฟังก์ชันใช้ไอเท็มแบบ ignore case
-        private void UseItemIgnoreCase(Inventory inv, string item)
+        // ใช้ไอเท็มแบบ ignore case
+        private void UseItemIgnoreCase(string item, int amount)
         {
-            foreach (var key in inv.inventory.Keys)
+            foreach (var key in Inventory.inventory.Keys)
             {
-                if (key.ToLower() == item.ToLower())
+                if (key.Equals(item, System.StringComparison.OrdinalIgnoreCase))
                 {
-                    Debug.Log("PickAxe used but not removed from inventory.");
+                    // แค่พิมพ์ข้อความว่าใช้ไอเท็ม แต่ไม่ลดจำนวน
+                    Debug.Log(item + " used but not removed from inventory.");
                     return;
                 }
             }

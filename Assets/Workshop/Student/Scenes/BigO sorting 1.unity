@@ -976,7 +976,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &354317550
 Transform:
   m_ObjectHideFlags: 0
@@ -1842,6 +1842,7 @@ GameObject:
   m_Component:
   - component: {fileID: 680280847}
   - component: {fileID: 680280848}
+  - component: {fileID: 680280849}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -1876,7 +1877,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d4769b0e22fa846bfb96dd1e7813c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Craftable
-  uiPanel: {fileID: 2023408084}
+--- !u!114 &680280849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680280846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dca6699fad53f94f86b4b99eb0753c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Solution.Inventory
 --- !u!1 &702197919
 GameObject:
   m_ObjectHideFlags: 0
@@ -4171,6 +4183,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
+      propertyPath: ResourceCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
       propertyPath: obsatcleCount
       value: 25
       objectReference: {fileID: 0}
@@ -4183,6 +4200,11 @@ PrefabInstance:
         type: 3}
       propertyPath: itemsPrefab.Array.size
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: ResourcePrefab.Array.size
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
@@ -4285,6 +4307,24 @@ PrefabInstance:
       propertyPath: 'floorsPrefab.Array.data[7]'
       value: 
       objectReference: {fileID: 6445740215059966539, guid: bf71f31e556a9cf4796716d2371610ba,
+        type: 3}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: 'ResourcePrefab.Array.data[0]'
+      value: 
+      objectReference: {fileID: 4741638308512100111, guid: e4b630c0361a51b46898d911a41e3a13,
+        type: 3}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: 'ResourcePrefab.Array.data[1]'
+      value: 
+      objectReference: {fileID: 364264809626252256, guid: 75e1566d76012f84abf58c25d6822c5d,
+        type: 3}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: 'ResourcePrefab.Array.data[2]'
+      value: 
+      objectReference: {fileID: 7268341401360637159, guid: 197cc059649d4104ca3c5532853e22ba,
         type: 3}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}

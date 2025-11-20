@@ -43,6 +43,7 @@ namespace Solution
         public int colloctItemCount;
         public int EnemyCount;
         public int SkillCount;
+        public int ResourceCount;
 
         public Identity[,] mapdata;
 
@@ -89,7 +90,8 @@ namespace Solution
             PlaceItemsOnMap(SkillCount, SkillPrefab, itemParent, collectItem);
             PlaceItemsOnMap(EnemyCount, EnemyPrefab, enemyParent, enemy);
             SpawnPickAxeNearPlayer(PickAxePrefabArray, itemParent, radius: 1);
-            SpawnResourcesOnMap(ResourcePrefab.Length, ResourcePrefab, itemParent);
+            SpawnResourcesOnMap(ResourceCount, ResourcePrefab, itemParent);
+
 
 
             yield return new WaitForSeconds(0.5f);
