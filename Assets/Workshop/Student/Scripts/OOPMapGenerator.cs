@@ -28,6 +28,7 @@ namespace Solution
         public GameObject[] collectItemsPrefab;
         public GameObject[] EnemyPrefab;
         public GameObject[] SkillPrefab;
+        public GameObject[] ResourcePrefab;
         public GameObject[] PickAxePrefabArray;
 
         [Header("Set Transform")]
@@ -88,6 +89,8 @@ namespace Solution
             PlaceItemsOnMap(SkillCount, SkillPrefab, itemParent, collectItem);
             PlaceItemsOnMap(EnemyCount, EnemyPrefab, enemyParent, enemy);
             SpawnPickAxeNearPlayer(PickAxePrefabArray, itemParent, radius: 1);
+            SpawnResourcesOnMap(ResourcePrefab.Length, ResourcePrefab, itemParent);
+
 
             yield return new WaitForSeconds(0.5f);
             RandomDamageToListEnemies();
@@ -482,5 +485,39 @@ namespace Solution
 
             Debug.LogWarning("ไม่สามารถวาง PickAxe ใกล้ผู้เล่นได้");
         }
+        public void SpawnResourcesOnMap(int count, GameObject[] resourcePrefabs, Transform parent)
+        {
+            int placedCount = 0;
+            int preventInfiniteLoop = 2000;
+
+            while (placedCount < count && preventInfiniteLoop-- > 0)
+            {
+                int x = Random.Range(0, X);
+                int y = Random.Range(0, Y);
+
+                // ตำแหน่งต้องว่างและไม่ซ้ำ backbone
+                if (mapdata[x, y] == null && !reservedBackbone.Contains(new Vector2Int(x, y)))
+                {
+                    int r = Random.Range(0, resourcePrefabs.Length);
+                    GameObject obj = Instantiate(resourcePrefabs[r], new Vector3(x, y, 0), Quaternion.identity, parent);
+
+                    var id = obj.GetComponent<Identity>();
+                    mapdata[x, y] = id;
+                    id.positionX = x;
+                    id.positionY = y;
+                    id.mapGenerator = this;
+
+                    // ตั้งชื่อไอเทมตรง ๆ
+                    id.Name = resourcePrefabs[r].name;
+                    obj.name = $"Object_{id.Name} {x},{y}";
+
+                    placedCount++;
+                }
+            }
+
+            if (placedCount < count)
+                Debug.LogWarning($"Could not place all resources. placed {placedCount}/{count}");
+        }
+
     }
 }
