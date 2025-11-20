@@ -6,10 +6,6 @@ namespace Solution
 {
     public class OOPMapGenerator : MonoBehaviour
     {
-        [Header("Set Inventory Spawn")]
-        public static OOPMapGenerator Instance;
-        public Transform itemPickerTf;
-
         [Header("Set MapGenerator")]
         public int X;
         public int Y;
@@ -69,10 +65,6 @@ namespace Solution
 
         private void Awake()
         {
-            if (Instance == null)
-                Instance = this;
-            else
-                Destroy(gameObject);
             CreateMap();
         }
 
