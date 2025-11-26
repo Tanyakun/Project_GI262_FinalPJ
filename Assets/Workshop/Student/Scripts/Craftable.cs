@@ -3,14 +3,46 @@ using UnityEngine;
 
 namespace Solution
 {
-    // สืบทอดจาก Inventory เพื่อใช้ AddItem/UseItem/GetItemCount ได้เลย
+    // สืบทอดจาก Inventory เพื่อใช้ AddItem/UseItem/GetItemCount ได้
     public class Craftable : Inventory
     {
-        private bool isCraftMenuOpen = false;
+        // เก็บสูตรคราฟทั้งหมด (itemปลายทาง -> วัตถุดิบ)
+        private Dictionary<string, Dictionary<string, int>> recipes =
+            new Dictionary<string, Dictionary<string, int>>();
 
-        // ====== ฟังก์ชันกลาง ใช้ตรวจของ + คราฟ ======
-        private void CraftItem(string itemToCraft, Dictionary<string, int> requiredMaterials)
+        private bool isCraftMenuOpen = false;
+        private bool isSalvageMenuOpen = false;
+
+        private void Awake()
         {
+            // กำหนดสูตรคราฟครั้งเดียวที่นี่
+            recipes["Wooden Sword"] = new Dictionary<string, int>()
+            {
+                { "Wood Log", 2 }                // ดาบไม้ = ไม้ 2 ชิ้น
+            };
+
+            recipes["Silver Sword"] = new Dictionary<string, int>()
+            {
+                { "Wooden Sword", 1 },         // ดาบเหล็ก = ดาบไม้ 1 เล่ม
+                { "Silver Ingot", 1 }          //           + เหล็ก 1 แท่ง
+            };
+
+            recipes["Golden Sword"] = new Dictionary<string, int>()
+            {
+                { "Silver Sword", 1 },         // ดาบทอง = ดาบเหล็ก 1 เล่ม
+                { "Golden Ingot", 1 }          //          + ทอง 1 แท่ง
+            };
+        }
+
+        // ========= CRAFT =========
+        private void CraftItem(string itemToCraft)
+        {
+            if (!recipes.TryGetValue(itemToCraft, out var requiredMaterials))
+            {
+                Debug.LogWarning("No recipe for " + itemToCraft);
+                return;
+            }
+
             List<string> missingMaterials = new List<string>();
 
             foreach (var material in requiredMaterials)
@@ -18,7 +50,6 @@ namespace Solution
                 int countInInventory = GetItemCount(material.Key);
                 if (countInInventory < material.Value)
                 {
-                    // เก็บว่าขาดอะไรเท่าไหร่
                     int needMore = material.Value - countInInventory;
                     missingMaterials.Add(material.Key + " x" + needMore);
                 }
@@ -26,11 +57,12 @@ namespace Solution
 
             if (missingMaterials.Count > 0)
             {
-                Debug.Log("Cannot craft " + itemToCraft + ". Missing: " + string.Join(", ", missingMaterials));
+                Debug.Log("Cannot craft " + itemToCraft +
+                          ". Missing: " + string.Join(", ", missingMaterials));
                 return;
             }
 
-            // มีครบ → หักของ + เพิ่มของที่คราฟได้
+            // มีครบ → หักวัตถุดิบ
             foreach (var material in requiredMaterials)
             {
                 UseItem(material.Key, material.Value);
@@ -40,52 +72,63 @@ namespace Solution
             Debug.Log("Crafted " + itemToCraft + " successfully!");
         }
 
-        // ====== Recipe แต่ละแบบ ======
-        // ดาบไม้: ใช้ไม้ 2 ชิ้น
-        private void CraftWoodenSword()
-        {
-            var req = new Dictionary<string, int>()
-            {
-                { "Wood Log", 2 }          // ชื่อ item ใน inventory ต้องตรงกับตอน AddItem
-            };
+        private void CraftWoodenSword() => CraftItem("Wooden Sword");
+        private void CraftSilverSword() => CraftItem("Silver Sword");
+        private void CraftGoldenSword() => CraftItem("Golden Sword");
 
-            CraftItem("Wooden Sword", req);
+        // ========= SALVAGE (ย่อยของ) =========
+
+        // ฟังก์ชันหลัก: ย่อยไอเท็ม 1 ชิ้น
+        private void SalvageItem(string itemToSalvage)
+        {
+            if (!HasItem(itemToSalvage, 1))
+            {
+                Debug.Log("Cannot salvage " + itemToSalvage + ". You don't have it.");
+                return;
+            }
+
+            // หักไอเท็มที่จะย่อยก่อน
+            UseItem(itemToSalvage, 1);
+
+            // ย้อนสูตรเพื่อคืนวัตถุดิบทั้งหมด
+            RefundMaterialsRecursive(itemToSalvage, 1);
+
+            Debug.Log("Salvaged " + itemToSalvage + " and got materials back.");
         }
 
-        // ดาบเหล็ก: ดาบไม้ 1 เล่ม + เงิน 1 แท่ง
-        private void CraftSilverSword()
+        // ย้อนสูตรแบบ recursive:
+        // ถ้า item มีสูตร → แตกเป็นวัตถุดิบแล้วเรียกซ้ำ
+        // ถ้าไม่มีสูตร → ถือว่าเป็นวัตถุดิบพื้นฐาน → AddItem คืนให้
+        private void RefundMaterialsRecursive(string item, int count)
         {
-            var req = new Dictionary<string, int>()
+            if (!recipes.TryGetValue(item, out var requiredMaterials))
             {
-                { "Wooden Sword", 1 },
-                { "Silver Ingot", 1 }
-            };
+                // base material
+                AddItem(item, count);
+                return;
+            }
 
-            CraftItem("Silver Sword", req);
+            foreach (var material in requiredMaterials)
+            {
+                int total = material.Value * count;
+                RefundMaterialsRecursive(material.Key, total);
+            }
         }
 
-        // ดาบทอง: ดาบเงิน 1 เล่ม + ทอง 1 แท่ง
-        private void CraftGoldenSword()
-        {
-            var req = new Dictionary<string, int>()
-            {
-                { "Silver Sword", 1 },
-                { "Golden Ingot", 1 }
-            };
+        private void SalvageWoodenSword() => SalvageItem("Wooden Sword");
+        private void SalvageSilverSword() => SalvageItem("Silver Sword");
+        private void SalvageGoldenSword() => SalvageItem("Golden Sword");
 
-            CraftItem("Golden Sword", req);
-        }
-
-        // ====== Input Logic ======
+        // ========= INPUT / MENUS =========
         private void Update()
         {
-            // กด C เพื่อเปิด/ปิดเมนูคราฟ
+            // ----- เปิด / ปิด Craft Menu (C) -----
             if (Input.GetKeyDown(KeyCode.C))
             {
                 isCraftMenuOpen = !isCraftMenuOpen;
-
                 if (isCraftMenuOpen)
                 {
+                    isSalvageMenuOpen = false; // ปิดอีกเมนู
                     Debug.Log(
                         "=== Craft Menu ===\n" +
                         "1 - Wooden Sword (Wood Log x2)\n" +
@@ -100,20 +143,41 @@ namespace Solution
                 }
             }
 
-            if (!isCraftMenuOpen) return;
+            // ----- เปิด / ปิด Salvage Menu (Z) -----
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                isSalvageMenuOpen = !isSalvageMenuOpen;
+                if (isSalvageMenuOpen)
+                {
+                    isCraftMenuOpen = false; // ปิดเมนูคราฟ
+                    Debug.Log(
+                        "=== Salvage Menu ===\n" +
+                        "1 - Salvage Wooden Sword  (-> Wood Log x2)\n" +
+                        "2 - Salvage Silver Sword  (-> Wood Log x2, Silver Ingot x1)\n" +
+                        "3 - Salvage Golden Sword  (-> Wood Log x2, Silver Ingot x1, Golden Ingot x1)\n" +
+                        "Press 1/2/3 to salvage."
+                    );
+                }
+                else
+                {
+                    Debug.Log("Closed Salvage Menu.");
+                }
+            }
 
-            // เลือกสูตรคราฟด้วยเลข 1 / 2 / 3
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            // ----- กดเลขตอนอยู่ใน Craft Menu -----
+            if (isCraftMenuOpen)
             {
-                CraftWoodenSword();
+                if (Input.GetKeyDown(KeyCode.Alpha1)) CraftWoodenSword();
+                else if (Input.GetKeyDown(KeyCode.Alpha2)) CraftSilverSword();
+                else if (Input.GetKeyDown(KeyCode.Alpha3)) CraftGoldenSword();
             }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
+
+            // ----- กดเลขตอนอยู่ใน Salvage Menu -----
+            if (isSalvageMenuOpen)
             {
-                CraftSilverSword();
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                CraftGoldenSword();
+                if (Input.GetKeyDown(KeyCode.Alpha1)) SalvageWoodenSword();
+                else if (Input.GetKeyDown(KeyCode.Alpha2)) SalvageSilverSword();
+                else if (Input.GetKeyDown(KeyCode.Alpha3)) SalvageGoldenSword();
             }
         }
     }
