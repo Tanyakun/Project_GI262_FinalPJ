@@ -3652,6 +3652,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
+      propertyPath: resources.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
       propertyPath: EnemysOnMap.Array.size
       value: 0
       objectReference: {fileID: 0}
@@ -3785,6 +3790,39 @@ PrefabInstance:
       propertyPath: collectItemsPrefab.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: resources.Array.data[0].amount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: resources.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 364264809626252256, guid: 75e1566d76012f84abf58c25d6822c5d,
+        type: 3}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: resources.Array.data[1].amount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: resources.Array.data[1].prefab
+      value: 
+      objectReference: {fileID: 4741638308512100111, guid: e4b630c0361a51b46898d911a41e3a13,
+        type: 3}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: resources.Array.data[2].amount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
+        type: 3}
+      propertyPath: resources.Array.data[2].prefab
+      value: 
+      objectReference: {fileID: 6702759267070617441, guid: e67bbde33bdaca24fa8b37b8c6ac75d9,
+        type: 3}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
       propertyPath: 'PickAxePrefabArray.Array.data[0]'
