@@ -4,6 +4,13 @@ using UnityEngine;
 
 namespace Solution
 {
+    [System.Serializable]
+    public struct ResourceEntry
+    {
+        public GameObject prefab;
+        public int amount;
+    }
+
     public class OOPMapGenerator : MonoBehaviour
     {
         [Header("Set MapGenerator")]
@@ -28,8 +35,10 @@ namespace Solution
         public GameObject[] collectItemsPrefab;
         public GameObject[] EnemyPrefab;
         public GameObject[] SkillPrefab;
-        public GameObject[] ResourcePrefab;
         public GameObject[] PickAxePrefabArray;
+
+        [Header("Resource Settings")]
+        public ResourceEntry[] resources;
 
         [Header("Set Transform")]
         public Transform floorParent;
@@ -43,7 +52,6 @@ namespace Solution
         public int colloctItemCount;
         public int EnemyCount;
         public int SkillCount;
-        public int ResourceCount;
 
         public Identity[,] mapdata;
 
@@ -89,10 +97,11 @@ namespace Solution
             PlaceItemsOnMap(colloctItemCount, collectItemsPrefab, itemParent, collectItem);
             PlaceItemsOnMap(SkillCount, SkillPrefab, itemParent, collectItem);
             PlaceItemsOnMap(EnemyCount, EnemyPrefab, enemyParent, enemy);
+
             SpawnPickAxeNearPlayer(PickAxePrefabArray, itemParent, radius: 1);
-            SpawnResourcesOnMap(ResourceCount, ResourcePrefab, itemParent);
 
-
+            // NEW: Spawn resources by specific amount (no random prefab)
+            SpawnResourcesOnMap();
 
             yield return new WaitForSeconds(0.5f);
             RandomDamageToListEnemies();
@@ -137,7 +146,7 @@ namespace Solution
 
         private void SetUpExit()
         {
-            int minDistance = Mathf.Max(X, Y) / 10; 
+            int minDistance = Mathf.Max(X, Y) / 10;
             Vector2Int exitPos;
 
             int loopGuard = 500;
@@ -176,7 +185,7 @@ namespace Solution
                 return Wall;
             return mapdata[(int)x, (int)y];
         }
-        
+
         public void SetUpItem(int x, int y, GameObject[] _itemsPrefab, Transform parrent, string _name)
         {
             int r = Random.Range(0, _itemsPrefab.Length);
@@ -249,9 +258,6 @@ namespace Solution
             int attempts = 0;
             int maxAttempts = Mathf.Max(500, count * 20);
 
-            Debug.Log($"Start placing {count} obstacles on {X}x{Y} map");
-
-            
             Vector2Int keyPosition = FindKeyPosition();
             Vector2Int exitPosition = FindExitPosition();
 
@@ -263,28 +269,23 @@ namespace Solution
                 int y = Random.Range(0, Y);
                 var p = new Vector2Int(x, y);
 
-                
                 if (p == playerStartPos || p == keyPosition || (x == X - 1 && y == Y - 1))
                     continue;
 
                 if (reservedBackbone.Contains(p)) continue;
                 if (mapdata[x, y] != null) continue;
 
-                
                 mapdata[x, y] = prefab[Random.Range(0, prefab.Length)].GetComponent<Identity>();
 
-                // ตรวจว่า Player ยังไปถึง Key และ Exit ได้หรือไม่
                 bool canReachKey = HasPath(playerStartPos, keyPosition);
                 bool canReachExit = HasPath(playerStartPos, exitPosition);
 
                 if (!canReachKey || !canReachExit)
                 {
-                    // ถ้าเส้นทางตัน -> ยกเลิกการวาง
                     mapdata[x, y] = null;
                     continue;
                 }
 
-                // วาง DemonWall ตัวจริง
                 GameObject obj = Instantiate(prefab[Random.Range(0, prefab.Length)], new Vector3(x, y, 0), Quaternion.identity, parent);
                 var id = obj.GetComponent<Identity>();
                 mapdata[x, y] = id;
@@ -301,12 +302,11 @@ namespace Solution
             }
 
             if (placed < count)
-                Debug.LogWarning($"Obstacle placed {placed}/{count}. (ลดจำนวนสิ่งกีดขวางหรือขยายแผนที่)");
+                Debug.LogWarning($"Obstacle placed {placed}/{count}.");
 
             yield return null;
         }
 
-        // ฟังก์ชันช่วยหาตำแหน่ง Key บน mapdata
         private Vector2Int FindKeyPosition()
         {
             for (int x = 0; x < X; x++)
@@ -318,9 +318,9 @@ namespace Solution
                         return new Vector2Int(x, y);
                 }
             }
-            // fallback
             return new Vector2Int(0, 0);
         }
+
         private Vector2Int FindExitPosition()
         {
             for (int x = 0; x < X; x++)
@@ -328,15 +328,12 @@ namespace Solution
                 for (int y = 0; y < Y; y++)
                 {
                     var id = mapdata[x, y];
-                    if (id != null && id.Name == exit)   // exit คือ string ที่มีอยู่แล้วในสคริปต์
+                    if (id != null && id.Name == exit)
                         return new Vector2Int(x, y);
                 }
             }
-
-            // fallback ถ้าไม่พบ
             return new Vector2Int(0, 0);
         }
-
 
         private bool InBounds(int x, int y) => (x >= 0 && x < X && y >= 0 && y < Y);
 
@@ -399,8 +396,6 @@ namespace Solution
                 }
             }
             return false;
-
-            
         }
 
         private void BuildBackbonePath()
@@ -457,26 +452,23 @@ namespace Solution
                 reservedBackbone.Add(cur);
             }
         }
+
         public void SpawnPickAxeNearPlayer(GameObject[] pickAxePrefab, Transform parent, int radius = 3)
         {
             int tries = 0;
             while (tries < 100)
             {
-                // สุ่มตำแหน่ง x,y รอบ playerStartPos
                 int x = playerStartPos.x + Random.Range(-radius, radius + 1);
                 int y = playerStartPos.y + Random.Range(-radius, radius + 1);
 
-                // ตรวจ bounds ของแผนที่
                 if (x < 0 || x >= X || y < 0 || y >= Y)
                 {
                     tries++;
                     continue;
                 }
 
-                // ตรวจว่าตำแหน่งว่าง
                 if (mapdata[x, y] == null)
                 {
-                    // วาง PickAxe
                     SetUpItem(x, y, pickAxePrefab, parent, "PickAxe");
                     Debug.Log($"PickAxe spawned at ({x},{y}) near player.");
                     return;
@@ -487,39 +479,47 @@ namespace Solution
 
             Debug.LogWarning("ไม่สามารถวาง PickAxe ใกล้ผู้เล่นได้");
         }
-        public void SpawnResourcesOnMap(int count, GameObject[] resourcePrefabs, Transform parent)
-        {
-            int placedCount = 0;
-            int preventInfiniteLoop = 2000;
 
-            while (placedCount < count && preventInfiniteLoop-- > 0)
+        // ✔ NEW RESOURCE SPAWNER (fixed + specific amount per prefab)
+        public void SpawnResourcesOnMap()
+        {
+            foreach (var entry in resources)
+            {
+                for (int i = 0; i < entry.amount; i++)
+                {
+                    SpawnSingleResource(entry.prefab);
+                }
+            }
+        }
+
+        private void SpawnSingleResource(GameObject prefab)
+        {
+            int tries = 2000;
+
+            while (tries-- > 0)
             {
                 int x = Random.Range(0, X);
                 int y = Random.Range(0, Y);
 
-                // ตำแหน่งต้องว่างและไม่ซ้ำ backbone
                 if (mapdata[x, y] == null && !reservedBackbone.Contains(new Vector2Int(x, y)))
                 {
-                    int r = Random.Range(0, resourcePrefabs.Length);
-                    GameObject obj = Instantiate(resourcePrefabs[r], new Vector3(x, y, 0), Quaternion.identity, parent);
+                    GameObject obj = Instantiate(prefab, new Vector3(x, y, 0), Quaternion.identity, itemParent);
 
                     var id = obj.GetComponent<Identity>();
                     mapdata[x, y] = id;
+
                     id.positionX = x;
                     id.positionY = y;
                     id.mapGenerator = this;
 
-                    // ตั้งชื่อไอเทมตรง ๆ
-                    id.Name = resourcePrefabs[r].name;
+                    id.Name = prefab.name;
                     obj.name = $"Object_{id.Name} {x},{y}";
 
-                    placedCount++;
+                    return;
                 }
             }
 
-            if (placedCount < count)
-                Debug.LogWarning($"Could not place all resources. placed {placedCount}/{count}");
+            Debug.LogWarning($"ไม่สามารถวาง Resource: {prefab.name}");
         }
-
     }
 }
