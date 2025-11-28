@@ -8,6 +8,7 @@ namespace Solution
         // เปลี่ยนเป็น static เพื่อแชร์ระหว่างทุก instance
         public static Dictionary<string, int> inventory = new Dictionary<string, int>();
 
+
         public void AddItem(string item, int amount)
         {
             if (inventory.ContainsKey(item))

@@ -10,6 +10,13 @@ namespace Solution
         private Dictionary<string, Dictionary<string, int>> recipes =
             new Dictionary<string, Dictionary<string, int>>();
 
+        private Dictionary<string, int> weaponDamage = new Dictionary<string, int>()
+        {
+            { "Wooden Sword", 5 },
+            { "Silver Sword", 10 },
+            { "Golden Sword", 20 }
+        };
+
         private bool isCraftMenuOpen = false;
         private bool isSalvageMenuOpen = false;
 
@@ -58,7 +65,7 @@ namespace Solution
             if (missingMaterials.Count > 0)
             {
                 Debug.Log("Cannot craft " + itemToCraft +
-                          ". Missing: " + string.Join(", ", missingMaterials));
+                        ". Missing: " + string.Join(", ", missingMaterials));
                 return;
             }
 
@@ -70,7 +77,16 @@ namespace Solution
 
             AddItem(itemToCraft, 1);
             Debug.Log("Crafted " + itemToCraft + " successfully!");
+
+            // --- เพิ่มส่วนอัปเดตค่าโจมตีของ Player ---
+            var player = FindObjectOfType<OOPPlayer>();
+            if (player != null && weaponDamage.ContainsKey(itemToCraft))
+            {
+                player.AttackPoint = weaponDamage[itemToCraft];
+                Debug.Log("Player's AttackPoint is now " + player.AttackPoint);
+            }
         }
+
 
         private void CraftWoodenSword() => CraftItem("Wooden Sword");
         private void CraftSilverSword() => CraftItem("Silver Sword");
