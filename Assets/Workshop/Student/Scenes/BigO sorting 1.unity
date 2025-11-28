@@ -4308,7 +4308,7 @@ PrefabInstance:
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
       propertyPath: EnemyCount
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203,
         type: 3}
@@ -4580,8 +4580,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5615206909734415387, guid: 4c033ef69eb269849bab9de975c465ed,
         type: 3}
+      propertyPath: energy
+      value: 7000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5615206909734415387, guid: 4c033ef69eb269849bab9de975c465ed,
+        type: 3}
       propertyPath: maxEnergy
-      value: 50
+      value: 7000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5615206909734415387, guid: 4c033ef69eb269849bab9de975c465ed,
+        type: 3}
+      propertyPath: AttackPoint
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5615206909734415387, guid: 4c033ef69eb269849bab9de975c465ed,
         type: 3}
