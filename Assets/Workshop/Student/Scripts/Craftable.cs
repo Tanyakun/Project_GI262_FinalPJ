@@ -39,6 +39,12 @@ namespace Solution
                 { "Silver Sword", 1 },         // ดาบทอง = ดาบเหล็ก 1 เล่ม
                 { "Golden Ingot", 1 }          //          + ทอง 1 แท่ง
             };
+
+            recipes["laser Gun"] = new Dictionary<string, int>()
+            {
+                { "stone", 1 },        
+                { "laser", 1 }          
+            };
         }
 
         // ========= CRAFT =========
