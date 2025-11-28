@@ -110,7 +110,26 @@ namespace Solution
             RefundMaterialsRecursive(itemToSalvage, 1);
 
             Debug.Log("Salvaged " + itemToSalvage + " and got materials back.");
+
+            // --- อัปเดตค่าโจมตีของ Player ---
+            var player = FindObjectOfType<OOPPlayer>();
+            if (player != null)
+            {
+                int maxDamage = 0;
+                foreach (var kvp in weaponDamage)
+                {
+                    if (player.inventory.GetItemCount(kvp.Key) > 0)
+                    {
+                        if (kvp.Value > maxDamage)
+                            maxDamage = kvp.Value;
+                    }
+                }
+                player.AttackPoint = maxDamage;
+                Debug.Log("Player's AttackPoint is now " + player.AttackPoint);
+            }
+
         }
+
 
         // ย้อนสูตรแบบ recursive:
         // ถ้า item มีสูตร → แตกเป็นวัตถุดิบแล้วเรียกซ้ำ
