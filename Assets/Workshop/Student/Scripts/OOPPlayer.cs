@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +10,7 @@ namespace Solution
     public class OOPPlayer : Character
     {
         public Inventory inventory;
+        public bool canMove = true;
         public override void SetUP()
         {
             base.SetUP();
@@ -20,6 +21,8 @@ namespace Solution
 
         public void Update()
         {
+            if (!canMove) return;     // ถ้าห้ามขยับ
+
             if (Input.GetKeyDown(KeyCode.W))
             {
                 Move(Vector2.up);
@@ -68,6 +71,8 @@ namespace Solution
                 Debug.Log("No FireStorm in inventory");
             }
         }
+
+
         public OOPEnemy[] SortEnemiesByRemainningEnergy1()
         {
             var enemies = mapGenerator.GetEnemies();

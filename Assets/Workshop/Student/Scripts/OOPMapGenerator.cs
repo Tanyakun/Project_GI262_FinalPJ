@@ -1,9 +1,16 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Solution
 {
+    [System.Serializable]
+    public struct ResourceEntry
+    {
+        public GameObject prefab;
+        public int amount;
+    }
+
     public class OOPMapGenerator : MonoBehaviour
     {
         [Header("Set MapGenerator")]
@@ -18,16 +25,20 @@ namespace Solution
         public OOPExit Exit;
 
         [Header("Set Wall")]
-        public Identity Wall; // sentinel สำหรับขอบนอกกริด (อยู่นอก mapdata)
+        public Identity Wall;
 
         [Header("Set Prefab")]
         public GameObject[] floorsPrefab;
-        public GameObject[] wallsPrefab;        // ขอบนอกกริด
-        public GameObject[] demonWallsPrefab;   // สิ่งกีดขวางภายในกริด
+        public GameObject[] wallsPrefab;
+        public GameObject[] demonWallsPrefab;
         public GameObject[] itemsPrefab;
         public GameObject[] collectItemsPrefab;
         public GameObject[] EnemyPrefab;
         public GameObject[] SkillPrefab;
+        public GameObject[] PickAxePrefabArray;
+
+        [Header("Resource Settings")]
+        public ResourceEntry[] resources;
 
         [Header("Set Transform")]
         public Transform floorParent;
@@ -47,7 +58,6 @@ namespace Solution
         [Header("Enemy on Map")]
         public List<OOPEnemy> EnemysOnMap = new List<OOPEnemy>();
 
-        // block types
         [HideInInspector] public string empty = "";
         [HideInInspector] public string demonWall = "demonWall";
         [HideInInspector] public string potion = "potion";
@@ -57,18 +67,12 @@ namespace Solution
         [HideInInspector] public string collectItem = "collectItem";
         [HideInInspector] public string enemy = "enemy";
 
-        // --- OPTIONS ---
         [Header("Path Guard Options")]
-        [Tooltip("ถ้า true ศัตรูจะถือว่าเป็นตัวกีดขวางเส้นทางด้วย")]
         public bool enemiesBlockPath = false;
-
-        [Tooltip("ถ้า true จะสร้างเส้นทางสั้นสุด (Backbone) จาก Start ไป Exit แล้วล็อกไม่ให้วางสิ่งกีดขวางทับ")]
         public bool buildBackboneFirst = true;
 
-        // เก็บช่องของ backbone ที่ห้ามวางของทับ
         private HashSet<Vector2Int> reservedBackbone = new HashSet<Vector2Int>();
 
-        // ---------------- LIFECYCLE ----------------
         private void Awake()
         {
             CreateMap();
@@ -87,20 +91,22 @@ namespace Solution
             if (buildBackboneFirst)
                 BuildBackbonePath();
 
-            // 1) วางสิ่งกีดขวางแบบมี Path-Guard
-            PlaceObstaclesWithPathGuard(obsatcleCount, demonWallsPrefab, wallParent, demonWall);
+            yield return StartCoroutine(PlaceObstaclesWithPathGuardCoroutine(obsatcleCount, demonWallsPrefab, wallParent, demonWall));
 
-            // 2) วางของอื่น ๆ ที่ไม่กันทาง (หรือกันทางก็ได้แต่ไม่เช็คเส้น)
             PlaceItemsOnMap(itemPotionCount, itemsPrefab, itemParent, potion);
             PlaceItemsOnMap(colloctItemCount, collectItemsPrefab, itemParent, collectItem);
             PlaceItemsOnMap(SkillCount, SkillPrefab, itemParent, collectItem);
             PlaceItemsOnMap(EnemyCount, EnemyPrefab, enemyParent, enemy);
 
+            SpawnPickAxeNearPlayer(PickAxePrefabArray, itemParent, radius: 1);
+
+            // NEW: Spawn resources by specific amount (no random prefab)
+            SpawnResourcesOnMap();
+
             yield return new WaitForSeconds(0.5f);
             RandomDamageToListEnemies();
         }
 
-        // ---------------- MAP CREATION ----------------
         private void CreateMap()
         {
             mapdata = new Identity[X, Y];
@@ -122,7 +128,7 @@ namespace Solution
                         GameObject obj = Instantiate(floorsPrefab[r], new Vector3(x, y, 1), Quaternion.identity);
                         obj.transform.parent = floorParent;
                         obj.name = "floor_" + x + ", " + y;
-                        mapdata[x, y] = null; // เริ่มว่าง
+                        mapdata[x, y] = null;
                     }
                 }
             }
@@ -130,6 +136,7 @@ namespace Solution
 
         private void SetUpPlayer()
         {
+            playerStartPos = GetRandomEmptyPosition();
             player.mapGenerator = this;
             player.positionX = playerStartPos.x;
             player.positionY = playerStartPos.y;
@@ -139,20 +146,43 @@ namespace Solution
 
         private void SetUpExit()
         {
-            // วาง Exit มุมขวาบน (X-1, Y-1)
-            mapdata[X - 1, Y - 1] = Exit;
-            Exit.positionX = X - 1;
-            Exit.positionY = Y - 1;
+            int minDistance = Mathf.Max(X, Y) / 10;
+            Vector2Int exitPos;
+
+            int loopGuard = 500;
+            do
+            {
+                exitPos = GetRandomEmptyPosition();
+                loopGuard--;
+            }
+            while (Vector2Int.Distance(exitPos, playerStartPos) < minDistance && loopGuard > 0);
+
+            Exit.positionX = exitPos.x;
+            Exit.positionY = exitPos.y;
             Exit.mapGenerator = this;
-            Exit.transform.position = new Vector3(X - 1, Y - 1, 0);
+            Exit.transform.position = new Vector3(exitPos.x, exitPos.y, 0);
+            mapdata[exitPos.x, exitPos.y] = Exit;
         }
 
-        // ---------------- PUBLIC HELPERS ----------------
+        private Vector2Int GetRandomEmptyPosition()
+        {
+            int tries = 0;
+            while (tries < 1000)
+            {
+                int x = Random.Range(0, X);
+                int y = Random.Range(0, Y);
+                if (mapdata[x, y] == null)
+                    return new Vector2Int(x, y);
+                tries++;
+            }
+
+            return new Vector2Int(0, 0);
+        }
+
         public Identity GetMapData(float x, float y)
         {
             if (x >= X || x < 0 || y >= Y || y < 0)
-                return Wall; // sentinel: ขอบนอก
-
+                return Wall;
             return mapdata[(int)x, (int)y];
         }
 
@@ -175,23 +205,6 @@ namespace Solution
             obj.name = $"Object_{mapdata[x, y].Name} {x}, {y}";
         }
 
-        public void SetUpItem(int x, int y, GameObject _itemsPrefab, Transform parrent, string _name)
-        {
-            _itemsPrefab.transform.parent = parrent;
-            var id = _itemsPrefab.GetComponent<Identity>();
-
-            mapdata[x, y] = id;
-            id.positionX = x;
-            id.positionY = y;
-            id.mapGenerator = this;
-            if (_name != collectItem) id.Name = _name;
-
-            if (_name == enemy)
-                EnemysOnMap.Add(_itemsPrefab.GetComponent<OOPEnemy>());
-
-            _itemsPrefab.name = $"Object_{mapdata[x, y].Name} {x}, {y}";
-        }
-
         public OOPEnemy[] GetEnemies() => EnemysOnMap.ToArray();
 
         public void MoveEnemies()
@@ -210,7 +223,6 @@ namespace Solution
             }
         }
 
-        // ---------------- ITEM PLACEMENT (NON-BLOCKING) ----------------
         private void PlaceItemsOnMap(int count, GameObject[] prefab, Transform parent, string itemType, System.Action onComplete = null)
         {
             int placedCount = 0;
@@ -221,11 +233,9 @@ namespace Solution
                 int x = Random.Range(0, X);
                 int y = Random.Range(0, Y);
 
-                // กันทับ Player/Exit
                 if ((x == playerStartPos.x && y == playerStartPos.y) || (x == X - 1 && y == Y - 1))
                     continue;
 
-                // ถ้าเปิด backbone mode กันทับเส้นทางหลัก
                 if (reservedBackbone.Contains(new Vector2Int(x, y)))
                     continue;
 
@@ -242,69 +252,112 @@ namespace Solution
             onComplete?.Invoke();
         }
 
-        // ---------------- OBSTACLE PLACEMENT (BLOCKING WITH PATH-GUARD) ----------------
-        private void PlaceObstaclesWithPathGuard(int count, GameObject[] prefab, Transform parent, string itemType)
+        private IEnumerator PlaceObstaclesWithPathGuardCoroutine(int count, GameObject[] prefab, Transform parent, string itemType)
         {
             int placed = 0;
             int attempts = 0;
-            int maxAttempts = Mathf.Max(1000, count * 50);
+            int maxAttempts = Mathf.Max(500, count * 20);
 
-            while (placed < count && attempts++ < maxAttempts)
+            Vector2Int keyPosition = FindKeyPosition();
+            Vector2Int exitPosition = FindExitPosition();
+
+            while (placed < count && attempts < maxAttempts)
             {
+                attempts++;
+
                 int x = Random.Range(0, X);
                 int y = Random.Range(0, Y);
                 var p = new Vector2Int(x, y);
 
-                // ห้ามทับ Player/Exit
-                if (p == playerStartPos || (x == X - 1 && y == Y - 1))
+                if (p == playerStartPos || p == keyPosition || (x == X - 1 && y == Y - 1))
                     continue;
 
-                // ห้ามทับ backbone (หากเปิดใช้)
-                if (reservedBackbone.Contains(p))
-                    continue;
+                if (reservedBackbone.Contains(p)) continue;
+                if (mapdata[x, y] != null) continue;
 
-                if (mapdata[x, y] != null)
-                    continue;
+                mapdata[x, y] = prefab[Random.Range(0, prefab.Length)].GetComponent<Identity>();
 
-                // เช็ค Path-Guard: ถ้าวางที่ (x,y) แล้วทางจาก start → exit ยังมีอยู่ไหม
-                if (HasPath(playerStartPos, new Vector2Int(X - 1, Y - 1), p))
+                bool canReachKey = HasPath(playerStartPos, keyPosition);
+                bool canReachExit = HasPath(playerStartPos, exitPosition);
+
+                if (!canReachKey || !canReachExit)
                 {
-                    // ผ่าน → ค่อย Instantiate จริง
-                    SetUpItem(x, y, prefab, parent, itemType);
-                    placed++;
+                    mapdata[x, y] = null;
+                    continue;
                 }
-                // ถ้าไม่ผ่านจะลองตำแหน่งใหม่
+
+                GameObject obj = Instantiate(prefab[Random.Range(0, prefab.Length)], new Vector3(x, y, 0), Quaternion.identity, parent);
+                var id = obj.GetComponent<Identity>();
+                mapdata[x, y] = id;
+                id.positionX = x;
+                id.positionY = y;
+                id.mapGenerator = this;
+                id.Name = itemType;
+                obj.name = $"Object_{id.Name} {x},{y}";
+
+                placed++;
+
+                if (attempts % 200 == 0)
+                    yield return null;
             }
 
             if (placed < count)
-                Debug.LogWarning($"Obstacle placed {placed}/{count}. (ลดจำนวนสิ่งกีดขวางหรือขยายแผนที่)");
+                Debug.LogWarning($"Obstacle placed {placed}/{count}.");
+
+            yield return null;
         }
 
-        // ---------------- PATH CHECKING ----------------
+        private Vector2Int FindKeyPosition()
+        {
+            for (int x = 0; x < X; x++)
+            {
+                for (int y = 0; y < Y; y++)
+                {
+                    var id = mapdata[x, y];
+                    if (id != null && id.Name == "key")
+                        return new Vector2Int(x, y);
+                }
+            }
+            return new Vector2Int(0, 0);
+        }
+
+        private Vector2Int FindExitPosition()
+        {
+            for (int x = 0; x < X; x++)
+            {
+                for (int y = 0; y < Y; y++)
+                {
+                    var id = mapdata[x, y];
+                    if (id != null && id.Name == exit)
+                        return new Vector2Int(x, y);
+                }
+            }
+            return new Vector2Int(0, 0);
+        }
+
         private bool InBounds(int x, int y) => (x >= 0 && x < X && y >= 0 && y < Y);
 
         private bool IsBlocking(Identity id)
         {
             if (id == null) return false;
-
-            // demonWall กันทางเสมอ
             if (id.Name == demonWall) return true;
-
-            // exit / item / collectItem / potion ฯลฯ เดินทับได้ตามเกมคุณ
-            // enemy กันทางหรือไม่ ให้เลือกด้วยสวิตช์
             if (enemiesBlockPath && id.Name == enemy) return true;
-
             return false;
         }
 
-        /// <summary>
-        /// เช็คว่ามีทางจาก start → goal หรือไม่ โดยถือว่า tempBlocked (ถ้ามี) เป็นช่องที่ “บล็อก” ชั่วคราว
-        /// </summary>
+        private void ShuffleDirections(int[] dx, int[] dy)
+        {
+            for (int i = 0; i < dx.Length; i++)
+            {
+                int r = Random.Range(i, dx.Length);
+                (dx[i], dx[r]) = (dx[r], dx[i]);
+                (dy[i], dy[r]) = (dy[r], dy[i]);
+            }
+        }
+
         private bool HasPath(Vector2Int start, Vector2Int goal, Vector2Int? tempBlocked = null)
         {
             if (!InBounds(start.x, start.y) || !InBounds(goal.x, goal.y)) return false;
-
-            // ถ้า start/goal โดนบล็อกอยู่ก็ล้มเหลว
             if (IsBlocking(mapdata[start.x, start.y]) || IsBlocking(mapdata[goal.x, goal.y])) return false;
 
             var q = new Queue<Vector2Int>();
@@ -315,6 +368,8 @@ namespace Solution
 
             int[] dx = { 1, -1, 0, 0 };
             int[] dy = { 0, 0, 1, -1 };
+
+            ShuffleDirections(dx, dy);
 
             while (q.Count > 0)
             {
@@ -327,7 +382,6 @@ namespace Solution
                     int ny = p.y + dy[i];
                     if (!InBounds(nx, ny)) continue;
 
-                    // ถ้าเป็นช่องบล็อกชั่วคราว ให้ข้าม
                     if (tempBlocked.HasValue && nx == tempBlocked.Value.x && ny == tempBlocked.Value.y)
                         continue;
 
@@ -344,7 +398,6 @@ namespace Solution
             return false;
         }
 
-        // ---------------- BACKBONE PATH (OPTIONAL) ----------------
         private void BuildBackbonePath()
         {
             reservedBackbone.Clear();
@@ -361,6 +414,9 @@ namespace Solution
 
             int[] dx = { 1, -1, 0, 0 };
             int[] dy = { 0, 0, 1, -1 };
+
+            ShuffleDirections(dx, dy);
+
             bool found = false;
 
             while (q.Count > 0)
@@ -388,7 +444,6 @@ namespace Solution
 
             if (!found) return;
 
-            // ไล่ย้อนทางสั้นสุด goal → start แล้วบันทึกเป็นช่องที่ “กันสุ่มทับ”
             var cur = goal;
             reservedBackbone.Add(cur);
             while (prev.ContainsKey(cur))
@@ -396,6 +451,75 @@ namespace Solution
                 cur = prev[cur];
                 reservedBackbone.Add(cur);
             }
+        }
+
+        public void SpawnPickAxeNearPlayer(GameObject[] pickAxePrefab, Transform parent, int radius = 3)
+        {
+            int tries = 0;
+            while (tries < 100)
+            {
+                int x = playerStartPos.x + Random.Range(-radius, radius + 1);
+                int y = playerStartPos.y + Random.Range(-radius, radius + 1);
+
+                if (x < 0 || x >= X || y < 0 || y >= Y)
+                {
+                    tries++;
+                    continue;
+                }
+
+                if (mapdata[x, y] == null)
+                {
+                    SetUpItem(x, y, pickAxePrefab, parent, "PickAxe");
+                    Debug.Log($"PickAxe spawned at ({x},{y}) near player.");
+                    return;
+                }
+
+                tries++;
+            }
+
+            Debug.LogWarning("ไม่สามารถวาง PickAxe ใกล้ผู้เล่นได้");
+        }
+
+        // ✔ NEW RESOURCE SPAWNER (fixed + specific amount per prefab)
+        public void SpawnResourcesOnMap()
+        {
+            foreach (var entry in resources)
+            {
+                for (int i = 0; i < entry.amount; i++)
+                {
+                    SpawnSingleResource(entry.prefab);
+                }
+            }
+        }
+
+        private void SpawnSingleResource(GameObject prefab)
+        {
+            int tries = 2000;
+
+            while (tries-- > 0)
+            {
+                int x = Random.Range(0, X);
+                int y = Random.Range(0, Y);
+
+                if (mapdata[x, y] == null && !reservedBackbone.Contains(new Vector2Int(x, y)))
+                {
+                    GameObject obj = Instantiate(prefab, new Vector3(x, y, 0), Quaternion.identity, itemParent);
+
+                    var id = obj.GetComponent<Identity>();
+                    mapdata[x, y] = id;
+
+                    id.positionX = x;
+                    id.positionY = y;
+                    id.mapGenerator = this;
+
+                    id.Name = prefab.name;
+                    obj.name = $"Object_{id.Name} {x},{y}";
+
+                    return;
+                }
+            }
+
+            Debug.LogWarning($"ไม่สามารถวาง Resource: {prefab.name}");
         }
     }
 }

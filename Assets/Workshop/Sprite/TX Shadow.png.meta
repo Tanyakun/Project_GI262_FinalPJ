@@ -1,12 +1,5 @@
 fileFormatVersion: 2
 guid: ed7554aeefd5da44a9fe1ee9b93afe77
-AssetOrigin:
-  serializedVersion: 1
-  productId: 187605
-  packageName: Pixel Art Top Down - Basic
-  packageVersion: 1.0.1
-  assetPath: Assets/Cainos/Pixel Art Top Down - Basic/Texture/TX Shadow.png
-  uploadId: 421815
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -169,7 +162,7 @@ TextureImporter:
       213: 21300104
     second: TX Shadow Stone T7
   externalObjects: {}
-  serializedVersion: 13
+  serializedVersion: 12
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -186,12 +179,11 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
-    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMipmapLimit: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -230,22 +222,20 @@ TextureImporter:
   textureFormatSet: 0
   ignorePngGamma: 0
   applyGammaDecoding: 1
-  swizzle: 50462976
   cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: -1
+    textureFormat: 4
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Standalone
     maxTextureSize: 2048
@@ -256,9 +246,20 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 1
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
     maxTextureSize: 2048
@@ -269,9 +270,32 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
-    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 1
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
@@ -822,14 +846,14 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Shadow Stone T1
+      name: TX Shadow - Stone 01
       rect:
         serializedVersion: 2
         x: 10
         y: 10
         width: 12
         height: 7
-      alignment: 7
+      alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
@@ -843,15 +867,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Shadow Stone T2
+      name: TX Shadow - Stone 02
       rect:
         serializedVersion: 2
         x: 40
         y: 8
         width: 17
         height: 11
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 9
+      pivot: {x: 0.47058824, y: -0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -864,7 +888,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Shadow Stone T3
+      name: TX Shadow - Stone 03
       rect:
         serializedVersion: 2
         x: 69
@@ -885,15 +909,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Shadow Stone T4
+      name: TX Shadow - Stone 04
       rect:
         serializedVersion: 2
         x: 100
         y: 6
         width: 25
         height: 13
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 9
+      pivot: {x: 0.48, y: -0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -906,15 +930,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Shadow Stone T5
+      name: TX Shadow - Stone 05
       rect:
         serializedVersion: 2
         x: 130
         y: 6
         width: 29
         height: 15
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 9
+      pivot: {x: 0.4827586, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -927,15 +951,15 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Shadow Stone T6
+      name: TX Shadow - Stone 06
       rect:
         serializedVersion: 2
         x: 162
         y: 3
         width: 29
         height: 16
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 9
+      pivot: {x: 0.51724136, y: -0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1158,7 +1182,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: TX Shadow Stone T7
+      name: TX Shadow - Stone 07
       rect:
         serializedVersion: 2
         x: 3
@@ -1189,51 +1213,59 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      TX Shadow Altar: 21300096
-      TX Shadow Barrel: 21300022
-      TX Shadow Bridge Gate: 21300074
-      TX Shadow Chest: 21300000
-      TX Shadow Chest Opened: 21300008
-      TX Shadow Crate: 21300004
-      TX Shadow Crate Small: 21300006
-      TX Shadow Cube: 21300002
-      TX Shadow Gravestone A: 21300024
-      TX Shadow Gravestone B: 21300028
-      TX Shadow Gravestone C: 21300026
-      TX Shadow Pillar: 21300076
-      TX Shadow Pillar Broken: 21300078
-      TX Shadow Pot A: 21300046
-      TX Shadow Pot B: 21300048
-      TX Shadow Pot C: 21300050
-      TX Shadow Road Sign E: 21300042
-      TX Shadow Road Sign W: 21300044
-      TX Shadow Rune Pillar Broken: 21300014
-      TX Shadow Rune Pillar X2: 21300010
-      TX Shadow Rune Pillar X3: 21300012
-      TX Shadow Statue: 21300070
-      TX Shadow Stone Bench E: 21300056
-      TX Shadow Stone Bench S: 21300052
-      TX Shadow Stone Bench W: 21300054
-      TX Shadow Stone Coffin Hori: 21300038
-      TX Shadow Stone Coffin Vert: 21300036
       TX Shadow Stone Cube: 21300084
-      TX Shadow Stone Lantern: 21300072
-      TX Shadow Stone T1: 21300058
-      TX Shadow Stone T2: 21300060
-      TX Shadow Stone T3: 21300062
-      TX Shadow Stone T4: 21300064
-      TX Shadow Stone T5: 21300066
-      TX Shadow Stone T6: 21300068
-      TX Shadow Stone T7: 21300104
+      TX Shadow Pot A: 21300046
+      TX Shadow Stone Bench W: 21300054
+      TX Shadow Chest Opened: 21300008
+      TX Shadow Road Sign E: 21300042
+      TX Shadow Pillar Broken: 21300078
+      TX Shadow Stone Bench E: 21300056
+      TX Shadow Crate Small: 21300006
+      TX Shadow Rune Pillar X3: 21300012
+      TX Shadow Pot C: 21300050
+      TX Shadow Pot B: 21300048
+      TX Shadow Pillar: 21300076
+      TX Shadow Gravestone B: 21300028
+      TX Shadow Stone Bench S: 21300052
       TX Shadow Tileset Wall 1: 21300020
-      TX Shadow Tileset Wall 2: 21300018
-      TX Shadow Tileset Wall 3: 21300016
+      TX Shadow - Stone 04: 21300064
+      TX Shadow Stone Coffin Vert: 21300036
       TX Shadow Tileset Wall 4: 21300034
+      TX Shadow - Stone 05: 21300066
+      TX Shadow Gravestone C: 21300026
+      TX Shadow Rune Pillar X2: 21300010
+      TX Shadow Road Sign W: 21300044
+      TX Shadow Altar: 21300096
+      TX Shadow Rune Pillar Broken: 21300014
+      TX Shadow Tileset Wall 3: 21300016
+      TX Shadow Crate: 21300004
+      TX Shadow Chest: 21300000
+      TX Shadow Barrel: 21300022
+      TX Shadow Statue: 21300070
+      TX Shadow Bridge Gate: 21300074
+      TX Shadow Stone Lantern: 21300072
+      TX Shadow Tileset Wall 2: 21300018
       TX Shadow Well: 21300102
       TX Shadow Wooden Door: 21300098
+      TX Shadow - Stone 01: 21300058
+      TX Shadow Stone Coffin Hori: 21300038
+      TX Shadow - Stone 02: 21300060
+      TX Shadow - Stone 06: 21300068
+      TX Shadow Cube: 21300002
       TX Shadow Wooden Door Opened: 21300100
-  mipmapLimitGroupName: 
+      TX Shadow - Stone 07: 21300104
+      TX Shadow - Stone 03: 21300062
+      TX Shadow Gravestone A: 21300024
+  spritePackingTag: 
   pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 187605
+  packageName: Pixel Art Top Down - Basic
+  packageVersion: 1.2.2
+  assetPath: Assets/Workshop/Sprite/TX Shadow.png
+  uploadId: 783393

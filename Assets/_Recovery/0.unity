@@ -710,8 +710,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2142152727}
     - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203, type: 3}
+      propertyPath: EnemyCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365133027701863277, guid: 896fac2834903504f8973b3186300203, type: 3}
       propertyPath: obsatcleCount
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -794,6 +798,10 @@ PrefabInstance:
     - target: {fileID: 302965248406753578, guid: 4f1110dfa53247c4395893b70bc7d69b, type: 3}
       propertyPath: m_Name
       value: ZombieParade
+      objectReference: {fileID: 0}
+    - target: {fileID: 302965248406753578, guid: 4f1110dfa53247c4395893b70bc7d69b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4507059989428831995, guid: 4f1110dfa53247c4395893b70bc7d69b, type: 3}
       propertyPath: m_LocalPosition.x
